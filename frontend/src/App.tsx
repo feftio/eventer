@@ -1,19 +1,24 @@
+import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import RegPage from "./pages/RegPage";
+import { store } from "./store";
+import HomePage from "./pages/home";
+import LoginPage from "./pages/login";
+import NotFoundPage from "./pages/notfound";
+import RegistrationPage from "./pages/registration";
+import "antd/dist/antd.css";
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/" element={<HomePage />} />
-        <Route path="/reg" element={<RegPage />} />
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/registration" element={<RegistrationPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 };
 

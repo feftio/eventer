@@ -1,22 +1,15 @@
-import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
+import reportWebVitals from "./utils/reportWebVitals";
 
-const hostname: string = new URL(window.location.href).hostname;
-const domains: string[] = hostname.split(".");
-const subdomain: string | null = domains.length === 2 ? domains[0] : null;
-(window as any).subdomain = subdomain
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>,
+//   document.getElementById("root")
+// );
 
-console.log(subdomain);
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

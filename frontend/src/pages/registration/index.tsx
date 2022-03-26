@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function RegPage() {
+export default function RegisterPage() {
   return (
     <>
       <div>RegPage</div>
