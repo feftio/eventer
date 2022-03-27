@@ -5,7 +5,7 @@ import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
 import NotFoundPage from "./pages/notfound";
 import RegistrationPage from "./pages/registration";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 
 const App: React.FC = () => {
   return (
