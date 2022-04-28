@@ -1,10 +1,10 @@
 import { ThemeProvider, createTheme } from "@mui/material";
-import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { store } from "./store";
 import HomePage from "./pages/home";
 import AuthPage from "./pages/auth";
 import NotFoundPage from "./pages/notfound";
+import { initAuth } from "./redux/auth/functions";
+import { useRootDispatch } from "./redux";
 import "styles/general.scss";
 
 const theme = createTheme({
@@ -21,17 +21,16 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
+    useRootDispatch()(initAuth());
     return (
         <ThemeProvider theme={theme}>
-            <Provider store={store}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="*" element={<NotFoundPage />} />
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/auth" element={<AuthPage />} />
-                    </Routes>
-                </BrowserRouter>
-            </Provider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="*" element={<NotFoundPage />} />
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/auth" element={<AuthPage />} />
+                </Routes>
+            </BrowserRouter>
         </ThemeProvider>
     );
 };
