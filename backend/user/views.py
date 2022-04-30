@@ -1,12 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.renderers import JSONRenderer
-from user import serializers
-
-from user.serializers import UserSerializer
+from rest_framework.generics import CreateAPIView
+from user.serializers import LoginUserSerializer, RegisterUserSerializer, UserSerializer
 from user.models import User
+from rest_framework.authtoken.models import Token
 
 
 # class AllUsersView(APIView):
@@ -23,11 +21,6 @@ from user.models import User
 #         return Response(content)
 
 
-class LoginUserView(APIView):
-    def post(self, request, *args, **kwargs):
-        pass
-
-
 class AllUsersView(APIView):
     def get(self, request, *args, **kwargs):
         # data = UserSerializer()
@@ -42,7 +35,30 @@ class UpdateUserDataView(APIView):
         if first_name is None:
             return Response(data={'error': 'Nothing to update'})
         user = User.objects.get(pk=1)
-        serializer = UserSerializer(instance=user, data={'first_name': first_name}, partial=True)
+        serializer = UserSerializer(
+            instance=user, data={'first_name': first_name}, partial=True)
         serializer.is_valid(raise_exception=True)
         print(user._meta.fields[0].blank)
         return Response(UserSerializer(instance=user).data)
+
+
+class RegisterUserView(CreateAPIView):
+    serializer_class = RegisterUserSerializer
+
+
+class LoginUserView(APIView):
+    def get(self, request: Request):
+        serializer = LoginUserSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        token = serializer.save()
+        return Response(data={
+            'token': token.key
+        })
+
+
+class IdentifyUserView(APIView):
+    def get(self, request: Request):
+        serializer = UserSerializer(instance=Token.objects.get(
+            key=request.query_params.get('token')).user)
+        serializer.exclude('password', 'date_joined', 'groups')
+        return Response(serializer.data)
