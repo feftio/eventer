@@ -2,13 +2,25 @@ import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import styles from "styles/pages/auth.module.scss";
 import { authService } from "src/services/auth";
-import { RecordWithTtl } from "dns";
+import { login } from "src/redux/auth/functions";
+import { useRootDispatch, useRootSelector } from "src/redux";
 
-export const SignInForm: React.FC<{}> = () => {
+export const SignInForm: React.FC<any> = (props) => {
+    const dispatch = useRootDispatch();
+    const authState = useRootSelector((state) => state.auth);
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     return (
         <div
             className={`${styles["form-container"]} ${styles["sign-in-container"]}`}
         >
+            <h1>
+                {authState.token +
+                    " : " +
+                    authState.username +
+                    " : " +
+                    authState.authenticated}
+            </h1>
             <form action="#">
                 <h1>Sign in</h1>
                 <div className={styles["social-container"]}>
@@ -30,6 +42,7 @@ export const SignInForm: React.FC<{}> = () => {
                     margin="dense"
                     size="medium"
                     fullWidth
+                    onChange={(e) => setUsername(e.target.value)}
                 />
                 <TextField
                     type="password"
@@ -38,10 +51,19 @@ export const SignInForm: React.FC<{}> = () => {
                     margin="dense"
                     size="medium"
                     fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
                 <a href="#">Forgot your password?</a>
-                <Button variant="contained" sx={{ width: "100%" }}>
-                    Sign In
+                <Button
+                    variant="contained"
+                    sx={{ width: "100%" }}
+                    onClick={(e) => {
+                        dispatch(login(username, password));
+                        setPassword("");
+                    }}
+                >
+                    Login
                 </Button>
             </form>
         </div>
@@ -108,9 +130,11 @@ export const SignUpForm: React.FC<{}> = () => {
                     variant="contained"
                     sx={{ width: "100%", marginTop: "10px" }}
                     onClick={(e) => {
-                        console.log(
-                            authService.register(username, email, password)
-                        );
+                        authService
+                            .register(username, email, password)
+                            .then((response) => {
+                                console.dir(response);
+                            });
                     }}
                 >
                     Sign Up

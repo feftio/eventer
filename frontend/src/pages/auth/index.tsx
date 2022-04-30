@@ -4,6 +4,8 @@ import { SignInForm, SignUpForm } from "./forms";
 import classNames from "classnames";
 import styles from "styles/pages/auth.module.scss";
 import bg from "src/assets/images/auth-bg.jpg";
+import { useRootSelector } from "src/redux";
+import { Navigate } from "react-router-dom";
 
 export enum FormType {
     SignIn,
@@ -11,7 +13,11 @@ export enum FormType {
 }
 
 const AuthPage: React.FC<{}> = () => {
+    const authenticated = useRootSelector((state) => state.auth.authenticated);
+    const successModal = useRootSelector((state) => state.auth.successModal);
     const [form, setForm] = useState<FormType>(FormType.SignIn);
+
+    if (authenticated) return <Navigate replace to="/" />;
     return (
         <>
             <div
