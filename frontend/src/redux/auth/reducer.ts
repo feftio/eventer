@@ -14,18 +14,18 @@ const authReducer = (
     action: ActionType
 ): AuthStateType => {
     switch (action.type) {
-        case "INIT_AUTH_STATE":
+        case "AUTH/SET_AUTH_STATE":
             return { ...state, ...action.state };
-        case "REGISTER_USER":
+        case "AUTH/REGISTER_USER":
             return { ...state };
-        case "LOGIN_USER":
+        case "AUTH/LOGIN_USER":
             return {
                 ...state,
                 username: action.username,
                 token: action.token,
                 authenticated: true,
             };
-        case "LOGOUT_USER":
+        case "AUTH/LOGOUT_USER":
             return {
                 ...state,
                 ...initialAuthState,

@@ -4,7 +4,7 @@ import Swal from "src/swal";
 import {
     loginUserAC,
     logoutUserAC,
-    initAuthStateAC,
+    setAuthStateAC,
 } from "src/redux/auth/action-creators";
 
 export const login =
@@ -22,7 +22,12 @@ export const login =
                 dispatch(loginUserAC(token, username));
             })
             .catch((error) => {
-                console.log(error);
+                Swal.fire({
+                    title: "Wrong!",
+                    text: "Wrong username or password",
+                    icon: "error",
+                    confirmButtonText: "Cool",
+                });
             });
     };
 
@@ -42,7 +47,7 @@ export const initAuth = () => async (dispatch: RootDispatch) => {
     if (token !== null) {
         const response = await authService.identify(token);
         dispatch(
-            initAuthStateAC({
+            setAuthStateAC({
                 token,
                 authenticated: true,
                 username: response.data.username,
@@ -50,7 +55,7 @@ export const initAuth = () => async (dispatch: RootDispatch) => {
         );
     } else {
         dispatch(
-            initAuthStateAC({
+            setAuthStateAC({
                 authenticated: false,
             })
         );
