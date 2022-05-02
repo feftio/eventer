@@ -63,16 +63,16 @@ class LoginUserSerializer(serializers.ModelSerializer):
             token = Token.objects.create(user=user)
         return token
 
-    def validate(self, data):
-        username = data.get('username', None)
-        password = data.get('password', None)
+    def validate(self, attrs):
+        username = attrs.get('username', None)
+        password = attrs.get('password', None)
         user = authenticate(username=username, password=password)
         if user is None:
             raise serializers.ValidationError(
                 'A user with this email and password is not found.'
             )
-        data['user'] = user
-        return super().validate(data)
+        attrs['user'] = user
+        return super().validate(attrs)
 
     class Meta:
         model = User

@@ -23,7 +23,6 @@ from rest_framework.authtoken.models import Token
 
 class AllUsersView(APIView):
     def get(self, request, *args, **kwargs):
-        # data = UserSerializer()
         user = User.objects.get(pk=1)
         serializer = UserSerializer(instance=user)
         return Response(data=serializer.data)
