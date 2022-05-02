@@ -144,4 +144,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'user.User'
 
-API_PREFIX = 'api/v1/%s/'
+API_PREFIX = 'api/v1/'

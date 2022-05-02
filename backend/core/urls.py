@@ -19,11 +19,11 @@ from django.conf import settings
 from django.urls import include
 
 
-def api(url: str) -> str:
-    return settings.API_PREFIX % url
-
+api_urls = [
+    path('user/', include('user.urls'))
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(api('user'), include('user.urls')),
+    path(settings.API_PREFIX, include(api_urls)),
 ]
