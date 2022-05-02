@@ -7,9 +7,7 @@ export const authService = {
         });
     },
     register(username: string, email: string, password: string) {
-        return instance.get("user/register", {
-            params: { username, email, password },
-        });
+        return instance.post("user/register", { username, email, password });
     },
     identify(token: string) {
         return instance.get("user/identify", {
