@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home";
 import AuthPage from "./pages/auth";
 import NotFoundPage from "./pages/notfound";
-import { initAuth } from "./redux/auth/functions";
+import { restoreUser } from "./redux/user/functions";
 import { useRootDispatch } from "./redux";
+import CabinetPage from "src/pages/cabinet";
+import CabinetManager from "src/pages/cabinet/manager";
 import "styles/general.scss";
 
 const theme = createTheme({
@@ -21,17 +23,21 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
-    useRootDispatch()(initAuth());
+    const dispatch = useRootDispatch();
+    dispatch(restoreUser());
     return (
-        <ThemeProvider theme={theme}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="*" element={<NotFoundPage />} />
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/auth" element={<AuthPage />} />
-                </Routes>
-            </BrowserRouter>
-        </ThemeProvider>
+        <div>
+            <ThemeProvider theme={theme}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/auth" element={<AuthPage />} />
+                        {CabinetManager.route("/cabinet", <CabinetPage />)}
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
+                </BrowserRouter>
+            </ThemeProvider>
+        </div>
     );
 };
 
