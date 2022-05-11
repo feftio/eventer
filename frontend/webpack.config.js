@@ -25,6 +25,7 @@ module.exports = function (env) {
             assetModuleFilename: isProduction
                 ? "static/[name].[hash][ext][query]"
                 : "static/[name][ext][query]?[hash]",
+            publicPath: "/",
         },
         devServer: {
             compress: true,
