@@ -69,7 +69,7 @@ class LoginUserSerializer(serializers.ModelSerializer):
         user = authenticate(username=username, password=password)
         if user is None:
             raise serializers.ValidationError(
-                'A user with this email and password is not found.'
+                'A user with this username and password is not found.'
             )
         attrs['user'] = user
         return super().validate(attrs)
