@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRootDispatch, useRootSelector } from "src/redux";
-import { logout } from "src/redux/auth/functions";
-import Swal from "src/swal";
+import { logout } from "src/redux/user/functions";
 
 const HomePage: React.FC<{}> = () => {
     const dispatch = useRootDispatch();
-    const authenticated = useRootSelector((state) => state.auth.authenticated);
+    const authenticated = useRootSelector((state) => state.user.authenticated);
     if (authenticated)
         return (
             <>
