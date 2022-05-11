@@ -1,6 +1,6 @@
 import { instance } from "src/services";
 
-export const authService = {
+export const userService = {
     login(username: string, password: string) {
         return instance.get("user/login", {
             params: { username, password },

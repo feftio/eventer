@@ -1,15 +1,15 @@
-import { authService } from "src/services/auth";
+import { userService } from "src/services/user";
 import { RootDispatch } from "src/redux";
 import Swal from "src/swal";
 import {
     loginUserAC,
     logoutUserAC,
-    setAuthStateAC,
-} from "src/redux/auth/action-creators";
+    setUserStateAC,
+} from "src/redux/user/action-creators";
 
 export const login =
     (username: string, password: string) => (dispatch: RootDispatch) => {
-        authService
+        userService
             .login(username, password)
             .then((response) => {
                 const { token } = response.data;
@@ -34,7 +34,7 @@ export const login =
 export const register =
     (username: string, email: string, password: string) =>
     (dispatch: RootDispatch) => {
-        return authService.register(username, email, password);
+        return userService.register(username, email, password);
     };
 
 export const logout = () => (dispatch: RootDispatch) => {
@@ -42,22 +42,26 @@ export const logout = () => (dispatch: RootDispatch) => {
     dispatch(logoutUserAC());
 };
 
-export const initAuth = () => async (dispatch: RootDispatch) => {
+export const restoreUser = () => (dispatch: RootDispatch) => {
     const token = localStorage.getItem("token");
     if (token !== null) {
-        const response = await authService.identify(token);
         dispatch(
-            setAuthStateAC({
+            setUserStateAC({
                 token,
                 authenticated: true,
-                username: response.data.username,
             })
         );
-    } else {
-        dispatch(
-            setAuthStateAC({
-                authenticated: false,
-            })
+        userService.identify(token).then(
+            (response) => {
+                dispatch(
+                    setUserStateAC({
+                        username: response.data.username,
+                    })
+                );
+            },
+            (error) => {
+                dispatch(logout());
+            }
         );
     }
 };

@@ -1,4 +1,4 @@
-import * as authActionCreators from "src/redux/auth/action-creators";
+import * as userActionCreators from "src/redux/user/action-creators";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createStore, applyMiddleware } from "redux";
 import thunk, { ThunkDispatch } from "redux-thunk";
@@ -12,7 +12,7 @@ export const store = createStore(
 export type InferValueTypes<T> = T extends { [key: string]: infer U }
     ? U
     : never;
-export type ActionCreators = typeof authActionCreators;
+export type ActionCreators = typeof userActionCreators;
 export type ActionType = ReturnType<InferValueTypes<ActionCreators>>;
 export type RootState = ReturnType<typeof store.getState>;
 export type RootDispatch = typeof store.dispatch &
