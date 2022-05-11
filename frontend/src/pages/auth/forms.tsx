@@ -1,26 +1,18 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import styles from "styles/pages/auth.module.scss";
-import { authService } from "src/services/auth";
-import { login } from "src/redux/auth/functions";
-import { useRootDispatch, useRootSelector } from "src/redux";
+import { userService } from "src/services/user";
+import { login } from "src/redux/user/functions";
+import { useRootDispatch } from "src/redux";
 
-export const SignInForm: React.FC<any> = (props) => {
+export const LoginForm: React.FC<any> = (props) => {
     const dispatch = useRootDispatch();
-    const authState = useRootSelector((state) => state.auth);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     return (
         <div
             className={`${styles["form-container"]} ${styles["sign-in-container"]}`}
         >
-            <h1>
-                {authState.token +
-                    " : " +
-                    authState.username +
-                    " : " +
-                    authState.authenticated}
-            </h1>
             <form action="#">
                 <h1>Sign in</h1>
                 <div className={styles["social-container"]}>
@@ -70,7 +62,7 @@ export const SignInForm: React.FC<any> = (props) => {
     );
 };
 
-export const SignUpForm: React.FC<{}> = () => {
+export const RegistrationForm: React.FC<{}> = () => {
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -130,14 +122,14 @@ export const SignUpForm: React.FC<{}> = () => {
                     variant="contained"
                     sx={{ width: "100%", marginTop: "10px" }}
                     onClick={(e) => {
-                        authService
+                        userService
                             .register(username, email, password)
                             .then((response) => {
                                 console.dir(response);
                             });
                     }}
                 >
-                    Sign Up
+                    Register
                 </Button>
             </form>
         </div>

@@ -17,7 +17,7 @@ export const RightPanel: React.FC<PanelProps> = (props) => {
             <Button
                 variant="outlined"
                 onClick={() => {
-                    props.setForm(FormType.SignUp);
+                    props.setForm(FormType.Registration);
                 }}
                 sx={{
                     color: "#fff",
@@ -41,7 +41,7 @@ export const LeftPanel: React.FC<PanelProps> = (props) => {
             <Button
                 variant="outlined"
                 onClick={() => {
-                    props.setForm(FormType.SignIn);
+                    props.setForm(FormType.Login);
                 }}
                 sx={{
                     color: "#fff",
