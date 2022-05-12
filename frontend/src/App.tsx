@@ -6,8 +6,8 @@ import NotFoundPage from "./pages/notfound";
 import { restoreUser } from "./redux/user/functions";
 import { useRootDispatch } from "./redux";
 import CabinetPage from "src/pages/cabinet";
-import CabinetManager from "src/pages/cabinet/manager";
 import "styles/general.scss";
+import { CabinetRoute } from "./pages/cabinet/route";
 
 const theme = createTheme({
     palette: {
@@ -32,7 +32,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/auth" element={<AuthPage />} />
-                        {CabinetManager.route("/cabinet", <CabinetPage />)}
+                        {CabinetRoute("/cabinet", <CabinetPage />)}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </BrowserRouter>

@@ -16,12 +16,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useRootDispatch, useRootSelector } from "src/redux";
+import { useRootDispatch } from "src/redux";
 import { logout } from "src/redux/user/functions";
 import withAuthRedirect from "src/hoc/withAuthRedirect";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import CabinetManager from "./manager";
 import Swal from "src/swal";
+import { cabinetFragmentsForEach } from "./fragments";
 
 const drawerWidth = 200;
 
@@ -139,21 +139,21 @@ const CabinetPage: React.FC<{}> = () => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {CabinetManager.forEach((fragmentType, fragmentObject) => (
+                    {cabinetFragmentsForEach((type, fragment) => (
                         <ListItemButton
-                            key={fragmentType}
+                            key={type}
                             sx={{
                                 minHeight: 48,
                                 backgroundColor:
-                                    location.pathname ===
-                                    fragmentObject.fullPath()
+                                    location.pathname.split("/")[2] ===
+                                    fragment.path
                                         ? "#f5f5f5"
                                         : "transparent",
                                 justifyContent: open ? "initial" : "center",
                                 px: 2.5,
                             }}
                             onClick={() => {
-                                navigate(fragmentObject.path);
+                                navigate(fragment.path);
                             }}
                         >
                             <ListItemIcon
@@ -163,10 +163,10 @@ const CabinetPage: React.FC<{}> = () => {
                                     justifyContent: "center",
                                 }}
                             >
-                                {fragmentObject.icon()}
+                                {fragment.icon()}
                             </ListItemIcon>
                             <ListItemText
-                                primary={fragmentObject.label}
+                                primary={fragment.label}
                                 sx={{ opacity: open ? 1 : 0 }}
                             />
                         </ListItemButton>
@@ -183,14 +183,12 @@ const CabinetPage: React.FC<{}> = () => {
                         }}
                         onClick={() => {
                             Swal.fire({
-                                title: "Do you want to logout from your account?",
+                                title: "Do you really want to logout?",
                                 showDenyButton: true,
                                 confirmButtonText: "Yes",
                                 denyButtonText: "No",
                             }).then((result) => {
-                                if (result.isConfirmed) {
-                                    dispatch(logout());
-                                }
+                                if (result.isConfirmed) dispatch(logout());
                             });
                         }}
                     >
