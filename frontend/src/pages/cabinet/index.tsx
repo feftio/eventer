@@ -95,7 +95,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const CabinetPage: React.FC<{}> = () => {
-    const location = useLocation();
+    const path = useLocation().pathname.split("/")[2];
     const navigate = useNavigate();
     const dispatch = useRootDispatch();
     const theme = useTheme();
@@ -145,8 +145,8 @@ const CabinetPage: React.FC<{}> = () => {
                             sx={{
                                 minHeight: 48,
                                 backgroundColor:
-                                    location.pathname.split("/")[2] ===
-                                    fragment.path
+                                    path === fragment.path ||
+                                    (path === undefined && type === "events")
                                         ? "#f5f5f5"
                                         : "transparent",
                                 justifyContent: open ? "initial" : "center",

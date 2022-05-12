@@ -2,7 +2,7 @@ import { Route } from "react-router-dom";
 import { CabinetFragmentType } from "src/pages/cabinet/fragments";
 import fragments from "src/pages/cabinet/fragments";
 
-export let rootPath = "/cabinet";
+export let rootPath: string;
 
 export function CabinetRoute(
     path: string,
@@ -14,7 +14,7 @@ export function CabinetRoute(
             <Route
                 index
                 key="route-default-fragment"
-                element={fragments["events"].element()}
+                element={fragments.events.element()}
             />
             {Object.keys(fragments).map((type: CabinetFragmentType) => {
                 if (fragments[type].with !== undefined) {
