@@ -1,11 +1,12 @@
 import EditIcon from "@mui/icons-material/Edit";
 import ListIcon from "@mui/icons-material/FeaturedPlayList";
-import EventsCabinetFragment from "./EventsCabinetFragment";
-import EditCabinetFragment from "./EditCabinetFragment";
-import ProfileCabinetFragment from "./ProfileCabinetFragment";
+import SettingsIcon from "@mui/icons-material/Settings";
+import EventsCabinetFragment from "./events/EventsCabinetFragment";
+import EditCabinetFragment from "./edit/EditCabinetFragment";
+import SettingsCabinetFragment from "./settings/SettingsCabinetFragment";
 import { rootPath } from "src/pages/cabinet/route";
 
-const cabinetFragmentTypes = ["events", "edit", "profile"] as const;
+const cabinetFragmentTypes = ["events", "edit", "settings"] as const;
 export type CabinetFragmentType = typeof cabinetFragmentTypes[number];
 export interface CabinetFragmentObjectGeneral {
     fullPath?: () => string;
@@ -42,11 +43,11 @@ const cabinetFragments: CabinetFragmentsType = {
             element: () => cabinetFragments.edit.element(),
         },
     },
-    profile: {
-        label: "Profile",
-        icon: () => <EditIcon />,
-        element: () => <ProfileCabinetFragment />,
-        path: "profile",
+    settings: {
+        label: "Settings",
+        icon: () => <SettingsIcon />,
+        element: () => <SettingsCabinetFragment />,
+        path: "settings",
     },
 } as const;
 

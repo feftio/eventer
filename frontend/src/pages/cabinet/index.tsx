@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, useTheme, Theme, CSSObject, Button } from "@mui/material";
+import { styled, useTheme, Theme, CSSObject } from "@mui/material";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -22,6 +22,7 @@ import withAuthRedirect from "src/hoc/withAuthRedirect";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Swal from "src/swal";
 import { cabinetFragmentsForEach } from "./fragments";
+import ProfileMenu from "src/components/ProfileMenu";
 
 const drawerWidth = 200;
 
@@ -122,9 +123,15 @@ const CabinetPage: React.FC<{}> = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="div"
+                        sx={{ flexGrow: 1 }}
+                    >
                         Cabinet
                     </Typography>
+                    <ProfileMenu />
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
