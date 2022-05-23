@@ -1,24 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from user.serializers import LoginUserSerializer, RegisterUserSerializer, UserSerializer
 from user.models import User
 from rest_framework.authtoken.models import Token
-
-
-# class AllUsersView(APIView):
-#     # authentication_classes = [TokenAuthentication]
-#     # permission_classes = [IsAuthenticated]
-
-#     def get(self, request: Request):
-#         content = {
-#             'user': str(request.user),
-#             'auth': str(request.auth),
-#             'user.__class__': str(request.user.__class__),
-#             'auth.__class__': str(request.auth.__class__)
-#         }
-#         return Response(content)
 
 
 class AllUsersView(APIView):
@@ -46,18 +32,17 @@ class RegisterUserView(CreateAPIView):
 
 
 class LoginUserView(APIView):
-    def get(self, request: Request):
-        serializer = LoginUserSerializer(data=request.query_params)
+    def post(self, request: Request, *args, **kwargs):
+        serializer = LoginUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         token = serializer.save()
-        return Response(data={
-            'token': token.key
-        })
+        return Response({'token': token.key})
 
 
 class IdentifyUserView(APIView):
     def get(self, request: Request):
         serializer = UserSerializer(instance=Token.objects.get(
             key=request.query_params.get('token')).user)
-        serializer.exclude('password', 'date_joined', 'groups')
+        serializer.exclude('password', 'date_joined',
+                           'groups', 'is_active', 'user_permissions')
         return Response(serializer.data)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from event.models import Event
+from event.models import DescriptionImage, Event
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -7,5 +7,14 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = '__all__'
 
-    def create(self, validated_data):
-        return super().create(validated_data)
+
+class UserEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        exclude = ('id', 'user')
+
+
+class DescriptionImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DescriptionImage
+        fields = '__all__'
