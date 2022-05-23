@@ -34,7 +34,7 @@ class EventCreateView(CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class GetAllUserEventsView(ListAPIView):
+class GetUserEventsView(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = UserEventSerializer
     queryset = Event.objects.all()
@@ -44,7 +44,7 @@ class GetAllUserEventsView(ListAPIView):
         return super().list(request, *args, **kwargs)
 
 
-class LoadDescriptionImage(CreateAPIView):
+class LoadDescriptionImageView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser, )
     serializer_class = DescriptionImageSerializer
 
