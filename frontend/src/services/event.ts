@@ -1,14 +1,11 @@
 import { instance } from "src/services";
 
 export const eventService = {
-    create(form_data: any) {
-        return instance.post("event/create", form_data, {
+    create(formData: FormData) {
+        return instance.post("event/create", formData, {
             headers: {
                 "content-type": "multipart/form-data",
             },
         });
-    },
-    register(username: string, email: string, password: string) {
-        return instance.post("user/register", { username, email, password });
     },
 };

@@ -21,9 +21,6 @@ const ProfileMenu: React.FC<{}> = () => {
         <div>
             <IconButton
                 size="large"
-                aria-label="cabinet of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
                 sx={{ borderRadius: 1 }}
@@ -49,7 +46,6 @@ const ProfileMenu: React.FC<{}> = () => {
                 onClose={handleClose}
             >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
                 <MenuItem
                     onClick={() => {
                         handleClose();

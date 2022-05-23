@@ -1,6 +1,7 @@
 import { ActionType } from "src/redux";
 
 const initialUserState = {
+    id: null as string | null,
     username: null as string | null,
     token: null as string | null,
     authenticated: false as boolean,

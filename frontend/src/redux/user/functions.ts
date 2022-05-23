@@ -20,6 +20,7 @@ export const login =
                     icon: "success",
                 });
                 dispatch(loginUserAC(token, username));
+                dispatch(restoreUser());
             })
             .catch((error) => {
                 Swal.fire({
@@ -55,7 +56,11 @@ export const restoreUser = () => (dispatch: RootDispatch) => {
             (response) => {
                 dispatch(
                     setUserStateAC({
+                        id: response.data.id,
                         username: response.data.username,
+                        email: response.data.email,
+                        firstName: response.data.first_name,
+                        lastName: response.data.last_name,
                     })
                 );
             },

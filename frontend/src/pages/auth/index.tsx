@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LeftPanel, RightPanel } from "./panels";
 import { LoginForm, RegistrationForm } from "./forms";
 import classNames from "classnames";
-import styles from "styles/pages/auth.module.scss";
+import classes from "styles/pages/auth.module.scss";
 import bg from "src/assets/images/auth-bg.jpg";
 import withAuthRedirect from "src/hoc/withAuthRedirect";
 
@@ -25,26 +25,17 @@ const AuthPage: React.FC<{}> = () => {
                     top: "0",
                 }}
             />
-            {/* <NavLink
-                to="/"
-                style={{
-                    position: "absolute",
-                    display: "block",
-                    left: "50%",
-                    transform: "translate(-50%, 100%)",
-                }}
-            ><img src={home} width="50" height="50" /></NavLink> */}
             <div
                 className={classNames({
-                    [styles["auth-container"]]: true,
-                    [styles["right-panel-active"]]:
+                    [classes["auth-container"]]: true,
+                    [classes["right-panel-active"]]:
                         form === FormType.Registration,
                 })}
             >
                 <RegistrationForm />
                 <LoginForm />
-                <div className={styles["overlay-container"]}>
-                    <div className={styles["overlay"]}>
+                <div className={classes["overlay-container"]}>
+                    <div className={classes["overlay"]}>
                         <LeftPanel setForm={setForm} />
                         <RightPanel setForm={setForm} />
                     </div>

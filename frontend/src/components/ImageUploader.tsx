@@ -1,9 +1,5 @@
 import { PhotoCamera } from "@mui/icons-material";
-import {
-    Button,
-    Stack,
-    styled,
-} from "@mui/material";
+import { Button, Stack, styled } from "@mui/material";
 import React from "react";
 
 const Input = styled("input")({
@@ -42,8 +38,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ image, setImage }) => {
             {image !== null ? (
                 <img
                     src={URL.createObjectURL(image)}
-                    width="auto"
-                    height="200px"
+                    width="200px"
+                    height="auto"
                     alt="Image"
                 />
             ) : null}
