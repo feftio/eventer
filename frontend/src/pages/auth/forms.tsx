@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
-import styles from "styles/pages/auth.module.scss";
-import { userService } from "src/services/user";
-import { login } from "src/redux/user/functions";
+import classes from "styles/pages/auth.module.scss";
+import { login, register } from "src/redux/user/functions";
 import { useRootDispatch } from "src/redux";
 
-export const LoginForm: React.FC<any> = (props) => {
+export const LoginForm: React.FC<any> = () => {
     const dispatch = useRootDispatch();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
     return (
         <div
-            className={`${styles["form-container"]} ${styles["sign-in-container"]}`}
+            className={`${classes["form-container"]} ${classes["sign-in-container"]}`}
         >
             <form action="#">
                 <h1>Sign in</h1>
-                <div className={styles["social-container"]}>
+                <div className={classes["social-container"]}>
                     <a href="#" className="social">
                         <i className="fab fa-facebook-f"></i>
                     </a>
@@ -46,7 +46,6 @@ export const LoginForm: React.FC<any> = (props) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <a href="#">Forgot your password?</a>
                 <Button
                     variant="contained"
                     sx={{ width: "100%" }}
@@ -63,17 +62,18 @@ export const LoginForm: React.FC<any> = (props) => {
 };
 
 export const RegistrationForm: React.FC<{}> = () => {
+    const dispatch = useRootDispatch();
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
     return (
         <div
-            className={`${styles["form-container"]} ${styles["sign-up-container"]}`}
+            className={`${classes["form-container"]} ${classes["sign-up-container"]}`}
         >
             <form action="#">
                 <h1>Create Account</h1>
-                <div className={styles["social-container"]}>
+                <div className={classes["social-container"]}>
                     <a href="#" className="social">
                         <i className="fab fa-facebook-f"></i>
                     </a>
@@ -122,11 +122,7 @@ export const RegistrationForm: React.FC<{}> = () => {
                     variant="contained"
                     sx={{ width: "100%", marginTop: "10px" }}
                     onClick={(e) => {
-                        userService
-                            .register(username, email, password)
-                            .then((response) => {
-                                console.dir(response);
-                            });
+                        dispatch(register(username, email, password));
                     }}
                 >
                     Register

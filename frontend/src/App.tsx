@@ -8,6 +8,7 @@ import { useRootDispatch } from "./redux";
 import CabinetPage from "src/pages/cabinet";
 import "styles/general.scss";
 import { CabinetRoute } from "./pages/cabinet/route";
+import EventPage from "src/pages/event";
 
 const theme = createTheme({
     palette: {
@@ -32,6 +33,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/auth" element={<AuthPage />} />
+                        <Route path="/event/:id" element={<EventPage />} />
                         {CabinetRoute("/cabinet", <CabinetPage />)}
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>

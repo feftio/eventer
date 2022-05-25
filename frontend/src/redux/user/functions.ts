@@ -15,7 +15,7 @@ export const login =
                 const { token } = response.data;
                 localStorage.setItem("token", token);
                 Swal.fire({
-                    title: `Hello, ${username}`,
+                    title: `Hello, ${username}!`,
                     html: "It's your own cabinet...",
                     icon: "success",
                 });
@@ -27,7 +27,7 @@ export const login =
                     title: "Wrong!",
                     text: "Wrong username or password",
                     icon: "error",
-                    confirmButtonText: "Cool",
+                    confirmButtonText: "Ok",
                 });
             });
     };
@@ -35,7 +35,23 @@ export const login =
 export const register =
     (username: string, email: string, password: string) =>
     (dispatch: RootDispatch) => {
-        return userService.register(username, email, password);
+        userService
+            .register(username, email, password)
+            .then((response) => {
+                Swal.fire({
+                    title: "Registration was success!",
+                    html: "Now you can login...",
+                    icon: "success",
+                });
+            })
+            .catch((error) => {
+                Swal.fire({
+                    title: "Registration was failed!",
+                    text: "Try to put something else...",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+            });
     };
 
 export const logout = () => (dispatch: RootDispatch) => {

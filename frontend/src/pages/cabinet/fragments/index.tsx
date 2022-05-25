@@ -1,9 +1,9 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import ListIcon from "@mui/icons-material/FeaturedPlayList";
 import SettingsIcon from "@mui/icons-material/Settings";
-import EventsCabinetFragment from "./events/EventsCabinetFragment";
-import CreateCabinetFragment from "./create/CreateCabinetFragment";
-import SettingsCabinetFragment from "./settings/SettingsCabinetFragment";
+import EventsCabinetFragment from "./EventsCabinetFragment";
+import CreateCabinetFragment from "./CreateCabinetFragment";
+import SettingsCabinetFragment from "./SettingsCabinetFragment";
 import { rootPath } from "src/pages/cabinet/route";
 
 const cabinetFragmentTypes = ["create", "events", "settings"] as const;

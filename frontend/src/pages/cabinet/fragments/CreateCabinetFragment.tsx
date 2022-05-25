@@ -14,8 +14,9 @@ import {
 import React, { useState } from "react";
 import ImageUploader from "src/components/ImageUploader";
 import { eventService } from "src/services/event";
-import WysiwygEditor from "src/components/wysiwyg-editor/WysiwygEditor";
-import { CollectionsBookmarkOutlined } from "@mui/icons-material";
+import WysiwygEditor from "src/components/wysiwyg/WysiwygEditor";
+import { ErrorEventCreateSwal, SuccessEventCreateSwal } from "src/swal/event";
+import { useNavigate } from "react-router-dom";
 
 const tagsList: string[] = [
     "Opening",
@@ -49,6 +50,7 @@ function getStyles(name: string, tags: string[], theme: Theme) {
 }
 
 const CreateCabinetFragment: React.FC<{}> = () => {
+    const navigate = useNavigate();
     const editor = React.useRef<any>();
     const [name, setName] = useState<string>("");
     const [startDate, setStartDate] = useState<string>("");
@@ -67,7 +69,7 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                     formData.append("name", name);
                     formData.append(
                         "description",
-                        JSON.stringify((await editor.current.save()).blocks)
+                        JSON.stringify(await editor.current.save())
                     );
                     if (startDate !== "")
                         formData.append(
@@ -81,7 +83,15 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                         );
                     formData.append("tags", JSON.stringify(tags));
                     if (image) formData.append("image", image, image.name);
-                    eventService.create(formData);
+                    eventService.create(formData).then(
+                        (response) => {
+                            SuccessEventCreateSwal();
+                            navigate("/cabinet/events");
+                        },
+                        (error) => {
+                            ErrorEventCreateSwal();
+                        }
+                    );
                 }}
             >
                 <WysiwygEditor editor={editor} />
@@ -105,13 +115,14 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                         }}
                         sx={{
                             width: "100%",
+                            mb: "25px",
                         }}
                     />
 
                     <TextField
                         label="Start Date"
                         type="datetime-local"
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%", mb: "25px" }}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -122,7 +133,7 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                     <TextField
                         label="End Date"
                         type="datetime-local"
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%", mb: "25px" }}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -130,7 +141,7 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                             setEndDate(e.target.value);
                         }}
                     />
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl sx={{ width: "100%", mb: "25px" }}>
                         <InputLabel id="tags-label">Tags</InputLabel>
                         <Select
                             labelId="tags-label"

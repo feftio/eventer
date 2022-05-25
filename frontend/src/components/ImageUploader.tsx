@@ -11,9 +11,9 @@ type ImageUploaderProps = {
     setImage: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ image, setImage }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
     return (
-        <Stack direction="column" gap={1.5}>
+        <Stack direction="column" gap={1.5} sx={{ width: "100%", mb: "25px" }}>
             <label htmlFor="image">
                 <Input
                     id="image"
@@ -21,13 +21,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ image, setImage }) => {
                     type="file"
                     onChange={(e) => {
                         if (e.target.files[0] === undefined) {
-                            setImage(null);
+                            props.setImage(null);
                             return;
                         }
-                        setImage(e.target.files[0]);
+                        props.setImage(e.target.files[0]);
                     }}
                 />
                 <Button
+                    fullWidth
                     variant="outlined"
                     endIcon={<PhotoCamera />}
                     component="span"
@@ -35,12 +36,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ image, setImage }) => {
                     Upload
                 </Button>
             </label>
-            {image !== null ? (
+            {props.image !== null ? (
                 <img
-                    src={URL.createObjectURL(image)}
-                    width="200px"
-                    height="auto"
+                    src={URL.createObjectURL(props.image)}
                     alt="Image"
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        marginTop: "25px",
+                    }}
                 />
             ) : null}
         </Stack>

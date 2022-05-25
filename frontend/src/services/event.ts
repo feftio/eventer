@@ -8,4 +8,10 @@ export const eventService = {
             },
         });
     },
+    getUserEvents() {
+        return instance.get("event/user");
+    },
+    getById(id: string) {
+        return instance.get("event/get", { params: { id } });
+    },
 };
