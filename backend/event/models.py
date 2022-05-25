@@ -1,5 +1,6 @@
 import uuid
 import os
+from xml.dom.domreg import registered
 from django.utils import timezone
 from django.db import models
 from user.models import User
@@ -8,10 +9,6 @@ from user.models import User
 def get_upload_path(instance, filename):
     extension = os.path.splitext(filename)[1]
     return '{0}/{1}{2}'.format(instance.user.id, uuid.uuid4(), extension)
-
-
-def empty_list():
-    return []
 
 
 class Event(models.Model):
@@ -28,12 +25,13 @@ class Event(models.Model):
     tags = models.JSONField()
     created_at = models.DateTimeField(default=timezone.now)
     city = models.CharField(max_length=50, blank=True, null=True)
+    registered = models.JSONField(default=list)
     watched = models.IntegerField(default=0)
     liked = models.JSONField(default=list)
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
 
-class DescriptionImage(models.Model):
+class Image(models.Model):
     image = models.ImageField(upload_to=get_upload_path, blank=True, null=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, to_field="id", db_column="user_id")

@@ -1,18 +1,18 @@
 import datetime
+from multiprocessing import AuthenticationError
+from uuid import UUID
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.request import Request
 from rest_framework.response import Response
-from event.models import DescriptionImage, Event
-from event.serializers import DescriptionImageSerializer, EventSerializer, UserEventSerializer
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
+from event.models import Event
+from event import serializers
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import exceptions
 
-from user.models import User
 
-
-class EventCreateView(CreateAPIView):
-    serializer_class = EventSerializer
+class CreateEventView(CreateAPIView):
+    serializer_class = serializers.EventSerializer
     parser_classes = (MultiPartParser, FormParser, )
 
     def prepare_data(self, request):
@@ -36,7 +36,7 @@ class EventCreateView(CreateAPIView):
 
 class GetUserEventsView(ListAPIView):
     permission_classes = (IsAuthenticated, )
-    serializer_class = UserEventSerializer
+    serializer_class = serializers.UserEventSerializer
     queryset = Event.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -44,13 +44,47 @@ class GetUserEventsView(ListAPIView):
         return super().list(request, *args, **kwargs)
 
 
-class LoadDescriptionImageView(CreateAPIView):
+class GetEventView(APIView):
+    def get(self, request, *args, **kwargs):
+        if 'id' not in request.query_params:
+            raise exceptions.NotFound()
+        try:
+            event = Event.objects.get(
+                id=UUID(request.query_params['id']))
+            serializer = serializers.EventSerializer(
+                instance=event, context={"request": request})
+            if serializer.data['active'] is False:
+                raise exceptions.NotFound()
+        except Exception:
+            raise exceptions.NotFound()
+        event.watched += 1
+        event.save()
+        return Response(serializer.data)
+
+
+class GetEventsView(ListAPIView):
+    authentication_classes = ()
+    serializer_class = serializers.EventSerializer
+    queryset = Event.objects.all()
+
+
+class LoadImageView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser, )
-    serializer_class = DescriptionImageSerializer
+    serializer_class = serializers.ImageSerializer
 
     def create(self, request, *args, **kwargs):
-        print(self.get_serializer().get_fields())
         request.data['user'] = request.query_params.get('user_id', None)
         response = super().create(request, *args, **kwargs)
         response.data = {'success': 1, 'file': {'url': response.data['image']}}
         return response
+
+
+class ChangeEventView(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = serializers.ChangeEventSerializer
+    queryset = Event.objects.all()
+    lookup_field = 'id'
+
+    def put(self, request, *args, **kwargs):
+        self.queryset = self.get_queryset().filter(user=request.user)
+        return super().put(request, *args, **kwargs)
