@@ -12,14 +12,14 @@ import {
     Box,
     CircularProgress,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useRootSelector } from "src/redux";
 import { eventService } from "src/services/event";
 import { useNavigate } from "react-router-dom";
-import { Google } from "@mui/icons-material";
+import { DeleteEventSwal } from "src/swal/event";
 
 function createColumn(name: string, align: TableCellProps["align"] = "left") {
     return { name, align };
@@ -38,11 +38,15 @@ const columns = [
 const EventsTable: React.FC<{}> = () => {
     const navigate = useNavigate();
     const [events, setEvents] = React.useState<any | null>(null);
-    useEffect(() => {
+    const [change, setChange] = React.useState<boolean>(true);
+    React.useEffect(() => {
+        if (change !== true) return;
         eventService.getUserEvents().then((response) => {
             setEvents(response.data);
         });
-    }, []);
+        setChange(false);
+    }, [change]);
+
     if (events === null)
         return (
             <div
@@ -125,7 +129,13 @@ const EventsTable: React.FC<{}> = () => {
                                     <IconButton
                                         size="large"
                                         onClick={() => {
-                                            console.dir(event.name);
+                                            DeleteEventSwal(() => {
+                                                eventService
+                                                    .delete(event.id)
+                                                    .then((response) => {
+                                                        setChange(true);
+                                                    });
+                                            });
                                         }}
                                         color="error"
                                     >

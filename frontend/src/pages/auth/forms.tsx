@@ -48,7 +48,7 @@ export const LoginForm: React.FC<any> = () => {
                 />
                 <Button
                     variant="contained"
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", marginTop: "10px" }}
                     onClick={(e) => {
                         dispatch(login(username, password));
                         setPassword("");

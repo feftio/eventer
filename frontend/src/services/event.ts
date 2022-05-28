@@ -1,5 +1,10 @@
 import { instance } from "src/services";
 
+type EventResponseType = {
+    id: string;
+    [key: string]: any
+};
+
 export const eventService = {
     create(formData: FormData) {
         return instance.post("event/create", formData, {
@@ -12,6 +17,9 @@ export const eventService = {
         return instance.get("event/user");
     },
     getById(id: string) {
-        return instance.get("event/get", { params: { id } });
+        return instance.get<EventResponseType>("event/get", { params: { id } });
+    },
+    delete(id: string) {
+        return instance.patch(`event/change/${id}`, { active: false });
     },
 };

@@ -16,3 +16,14 @@ export const ErrorEventCreateSwal = () => {
         confirmButtonText: "Ok",
     });
 };
+
+export const DeleteEventSwal = (handler: CallableFunction) => {
+    Swal.fire({
+        title: "Do you really want to delete this event?",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: "No",
+    }).then((result) => {
+        if (result.isConfirmed) handler();
+    });
+};

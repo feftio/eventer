@@ -1,4 +1,4 @@
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import WysiwygReader from "src/components/wysiwyg/WysiwygReader";
@@ -82,6 +82,15 @@ const EventPage: React.FC<{}> = () => {
                         <p>{event.name}</p>
                     </div>
                 </header>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <span>event.</span>
+                </div>
                 <WysiwygReader value={event.description} />
             </div>
         );
