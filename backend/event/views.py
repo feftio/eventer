@@ -37,7 +37,7 @@ class CreateEventView(CreateAPIView):
 class GetUserEventsView(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.UserEventSerializer
-    queryset = Event.objects.all()
+    queryset = Event.objects.filter(active=True)
 
     def list(self, request, *args, **kwargs):
         self.queryset = self.get_queryset().filter(user=request.user)
@@ -65,7 +65,7 @@ class GetEventView(APIView):
 class GetEventsView(ListAPIView):
     authentication_classes = ()
     serializer_class = serializers.EventSerializer
-    queryset = Event.objects.all()
+    queryset = Event.objects.filter(active=True)
 
 
 class LoadImageView(CreateAPIView):
@@ -85,6 +85,6 @@ class ChangeEventView(UpdateAPIView):
     queryset = Event.objects.all()
     lookup_field = 'id'
 
-    def put(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         self.queryset = self.get_queryset().filter(user=request.user)
-        return super().put(request, *args, **kwargs)
+        return super().patch(request, *args, **kwargs)

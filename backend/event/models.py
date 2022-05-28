@@ -1,6 +1,5 @@
 import uuid
 import os
-from xml.dom.domreg import registered
 from django.utils import timezone
 from django.db import models
 from user.models import User
