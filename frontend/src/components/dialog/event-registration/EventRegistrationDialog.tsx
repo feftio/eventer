@@ -8,11 +8,38 @@ import {
     TextField,
 } from "@mui/material";
 import React from "react";
+import { eventService } from "src/services/event";
+import {
+    ErrorEventRegisterSwal,
+    SuccessEventRegisterSwal,
+} from "src/swal/event";
 
-const EventRegistrationDialog: React.FC = () => {
-    const [open, setOpen] = React.useState(false);
+type EventRegistrationDialogProps = {
+    id: string;
+};
 
-    const handleSend = () => {};
+const EventRegistrationDialog: React.FC<EventRegistrationDialogProps> = (
+    props
+) => {
+    const [name, setName] = React.useState<string>("");
+    const [email, setEmail] = React.useState<string>("");
+    const [contacts, setContacts] = React.useState<string>("");
+    const [open, setOpen] = React.useState<boolean>(false);
+
+    const handleSend = () => {
+        handleClose();
+        eventService.register(props.id, name, email, contacts).then(
+            (response) => {
+                SuccessEventRegisterSwal();
+                setName("");
+                setEmail("");
+                setContacts("");
+            },
+            (error) => {
+                ErrorEventRegisterSwal();
+            }
+        );
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -38,10 +65,12 @@ const EventRegistrationDialog: React.FC = () => {
                 <DialogContent>
                     <DialogContentText>
                         To register for this event, please enter your name,
-                        email address and other contacts. The creator will
-                        contact you.
+                        email address and other contacts. The creator of this
+                        event will contact you.
                     </DialogContentText>
                     <TextField
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         autoFocus
                         margin="dense"
                         label="Name"
@@ -50,6 +79,8 @@ const EventRegistrationDialog: React.FC = () => {
                         variant="standard"
                     />
                     <TextField
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         margin="dense"
                         label="Email Address"
                         type="email"
@@ -57,6 +88,8 @@ const EventRegistrationDialog: React.FC = () => {
                         variant="standard"
                     />
                     <TextField
+                        value={contacts}
+                        onChange={(e) => setContacts(e.target.value)}
                         margin="dense"
                         label="Contacts"
                         type="text"

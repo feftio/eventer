@@ -27,3 +27,20 @@ export const DeleteEventSwal = (handler: CallableFunction) => {
         if (result.isConfirmed) handler();
     });
 };
+
+export const SuccessEventRegisterSwal = () => {
+    Swal.fire({
+        title: "Your data has been sent!",
+        html: "You will be contacted soon...",
+        icon: "success",
+    });
+};
+
+export const ErrorEventRegisterSwal = () => {
+    Swal.fire({
+        title: "Sending was failed!",
+        text: "Try to put something else...",
+        icon: "error",
+        confirmButtonText: "Ok",
+    });
+};

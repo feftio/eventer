@@ -40,4 +40,11 @@ export const eventService = {
             .get("event/special/tags")
             .then((response) => response.data);
     },
+    register(id: string, name: string, email: string, contacts: string) {
+        return instance.patch(`event/register/${id}`, {
+            name,
+            email,
+            contacts,
+        });
+    },
 };

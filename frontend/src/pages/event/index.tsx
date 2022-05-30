@@ -1,4 +1,4 @@
-import { Button, CircularProgress, TextField } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import WysiwygReader from "src/components/wysiwyg/WysiwygReader";
@@ -8,6 +8,7 @@ import DateNote from "src/components/date-note/DateNote";
 import TimeNote from "src/components/time-note/TimeNote";
 import CityNote from "src/components/city-note/CityNote";
 import EventRegistrationDialog from "src/components/dialog/event-registration/EventRegistrationDialog";
+import TagsNote from "src/components/tags-note/TagsNote";
 
 const EventPage: React.FC<{}> = () => {
     const params = useParams();
@@ -66,7 +67,7 @@ const EventPage: React.FC<{}> = () => {
                     />
                     <div className={classes["header-container"]}>
                         <p className={classes["event-name"]}>{event.name}</p>
-                        <div className={classes["cards-container"]}>
+                        <div className={classes["notes-container"]}>
                             <DateNote
                                 startDate={event.start_date}
                                 endDate={event.end_date}
@@ -76,10 +77,11 @@ const EventPage: React.FC<{}> = () => {
                                 endDate={event.end_date}
                             />
                             <CityNote city={event.city} />
+                            <TagsNote tags={event.tags} />
                         </div>
                     </div>
                 </header>
-                <EventRegistrationDialog />
+                <EventRegistrationDialog id={event.id} />
                 <WysiwygReader value={event.description} />
             </div>
         );
