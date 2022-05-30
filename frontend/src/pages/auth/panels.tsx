@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { FormType } from "src/pages/auth/index";
-import classes from "styles/pages/auth.module.scss";
+import classes from "src/pages/auth/style.module.scss";
 
 interface PanelProps {
     setForm: React.Dispatch<React.SetStateAction<FormType>>;

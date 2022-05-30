@@ -1,35 +1,27 @@
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    styled,
-    TextField,
-    Select,
-    MenuItem,
-    useTheme,
-    OutlinedInput,
-    Theme,
-    Paper,
-} from "@mui/material";
-import React, { useState } from "react";
+import { Button, styled, TextField, Paper } from "@mui/material";
+import React from "react";
 import ImageUploader from "src/components/ImageUploader";
 import { eventService } from "src/services/event";
 import WysiwygEditor from "src/components/wysiwyg/WysiwygEditor";
 import { ErrorEventCreateSwal, SuccessEventCreateSwal } from "src/swal/event";
 import { useNavigate } from "react-router-dom";
+import MultipleSelectField from "src/components/select-fields/MultipleSelectField";
+import SingleSelectField from "src/components/select-fields/SingleSelectField";
 
-const tagsList: string[] = [
-    "Opening",
-    "Show",
-    "Fair",
-    "Presentation",
-    "Holiday",
-    "Master Class",
-    "Training",
-    "Seminar",
-    "Festival",
-    "Concert",
-];
+// const tagsList: string[] = [
+//     "Opening",
+//     "Show",
+//     "Fair",
+//     "Presentation",
+//     "Holiday",
+//     "Master Class",
+//     "Training",
+//     "Seminar",
+//     "Festival",
+//     "Concert",
+// ];
+
+// const citiesList: string[] = ["Almaty", "Astana"];
 
 const Form = styled("form")({
     display: "flex",
@@ -40,25 +32,23 @@ const Form = styled("form")({
     alignItems: "start",
 });
 
-function getStyles(name: string, tags: string[], theme: Theme) {
-    return {
-        fontWeight:
-            tags.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightBold,
-    };
-}
-
 const CreateCabinetFragment: React.FC<{}> = () => {
     const navigate = useNavigate();
     const editor = React.useRef<any>();
-    const [name, setName] = useState<string>("");
-    const [startDate, setStartDate] = useState<string>("");
-    const [endDate, setEndDate] = useState<string>("");
-    const [tags, setTags] = useState<string[]>([]);
-    const [image, setImage] = useState<any>(null);
+    const [name, setName] = React.useState<string>("");
+    const [startDate, setStartDate] = React.useState<string>("");
+    const [endDate, setEndDate] = React.useState<string>("");
+    const [tags, setTags] = React.useState<string[]>([]);
+    const [city, setCity] = React.useState<string>("");
+    const [image, setImage] = React.useState<any>(null);
 
-    const theme = useTheme();
+    const [tagsList, setTagsList] = React.useState<string[]>([]);
+    const [citiesList, setCitisList] = React.useState<string[]>([]);
+
+    React.useEffect(() => {
+        eventService.getTags().then((data) => setTagsList(data));
+        eventService.getCities().then((data) => setCitisList(data));
+    }, []);
 
     return (
         <>
@@ -82,6 +72,8 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                             (new Date(endDate).getTime() / 1000).toString()
                         );
                     formData.append("tags", JSON.stringify(tags));
+
+                    if (city !== "") formData.append("city", city);
                     if (image) formData.append("image", image, image.name);
                     eventService.create(formData).then(
                         (response) => {
@@ -141,44 +133,20 @@ const CreateCabinetFragment: React.FC<{}> = () => {
                             setEndDate(e.target.value);
                         }}
                     />
-                    <FormControl sx={{ width: "100%", mb: "25px" }}>
-                        <InputLabel id="tags-label">Tags</InputLabel>
-                        <Select
-                            labelId="tags-label"
-                            id="tags"
-                            multiple
-                            value={tags}
-                            onChange={(e: any) => {
-                                const {
-                                    target: { value },
-                                } = e;
-                                setTags(
-                                    typeof value === "string"
-                                        ? value.split(",")
-                                        : value
-                                );
-                            }}
-                            input={<OutlinedInput label="Tagss" />}
-                            MenuProps={{
-                                PaperProps: {
-                                    style: {
-                                        maxHeight: 48 * 4.5 + 8,
-                                        width: 250,
-                                    },
-                                },
-                            }}
-                        >
-                            {tagsList.map((tag) => (
-                                <MenuItem
-                                    key={tag}
-                                    value={tag}
-                                    style={getStyles(tag, tags, theme)}
-                                >
-                                    {tag}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <MultipleSelectField
+                        label="Tags"
+                        state={tags}
+                        setState={setTags}
+                        list={tagsList}
+                        sx={{ mb: "25px" }}
+                    />
+                    <SingleSelectField
+                        label="City"
+                        state={city}
+                        setState={setCity}
+                        list={citiesList}
+                        sx={{ mb: "25px" }}
+                    />
                     <ImageUploader
                         image={image}
                         setImage={(file: File) => setImage(file)}

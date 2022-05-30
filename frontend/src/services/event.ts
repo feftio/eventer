@@ -1,8 +1,16 @@
 import { instance } from "src/services";
 
-type EventResponseType = {
+export type EventType = {
     id: string;
-    [key: string]: any
+    name: string;
+    image: string | null;
+    created_at: string;
+    start_date: string;
+    end_date: string;
+    liked: Array<string>;
+    description: object;
+    tags: Array<string>;
+    city: string;
 };
 
 export const eventService = {
@@ -17,9 +25,19 @@ export const eventService = {
         return instance.get("event/user");
     },
     getById(id: string) {
-        return instance.get<EventResponseType>("event/get", { params: { id } });
+        return instance.get<EventType>("event/get", { params: { id } });
     },
     delete(id: string) {
-        return instance.patch(`event/change/${id}`, { active: false });
+        return instance.delete(`event/delete/${id}`);
+    },
+    getCities() {
+        return instance
+            .get("event/special/cities")
+            .then((response) => response.data);
+    },
+    getTags() {
+        return instance
+            .get("event/special/tags")
+            .then((response) => response.data);
     },
 };

@@ -1,7 +1,6 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import EventsTable from "src/components/EventsTable";
-import { useNavigate } from "react-router-dom";
 
 const EventsCabinetFragment: React.FC<{}> = () => {
     return (

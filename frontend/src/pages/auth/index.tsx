@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LeftPanel, RightPanel } from "./panels";
 import { LoginForm, RegistrationForm } from "./forms";
 import classNames from "classnames";
-import classes from "styles/pages/auth.module.scss";
+import classes from "src/pages/auth/style.module.scss";
 import bg from "src/assets/images/auth-bg.jpg";
 import withAuthRedirect from "src/hoc/withAuthRedirect";
 

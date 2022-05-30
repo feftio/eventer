@@ -1,17 +1,22 @@
-import { CircularProgress, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import WysiwygReader from "src/components/wysiwyg/WysiwygReader";
-import { eventService } from "src/services/event";
+import { eventService, EventType } from "src/services/event";
+import classes from "src/pages/event/style.module.scss";
+import DateNote from "src/components/date-note/DateNote";
+import TimeNote from "src/components/time-note/TimeNote";
+import CityNote from "src/components/city-note/CityNote";
+import EventRegistrationDialog from "src/components/dialog/event-registration/EventRegistrationDialog";
 
 const EventPage: React.FC<{}> = () => {
     const params = useParams();
-    const [event, setEvent] = React.useState<any | null>(null);
+    const [event, setEvent] = React.useState<EventType | null>(null);
     const [loading, setLoading] = React.useState<boolean>(true);
 
     React.useEffect(() => {
-        const getEventById = async () => await eventService.getById(params.id);
-        getEventById()
+        eventService
+            .getById(params.id)
             .then((response) => setEvent(response.data))
             .catch(() => {})
             .finally(() => setLoading(false));
@@ -48,13 +53,7 @@ const EventPage: React.FC<{}> = () => {
     else
         return (
             <div style={{ display: "flex", flexDirection: "column" }}>
-                <header
-                    style={{
-                        position: "relative",
-                        display: "block",
-                        height: "630px",
-                    }}
-                >
+                <header className={classes["header"]}>
                     <div
                         style={{
                             position: "absolute",
@@ -65,32 +64,22 @@ const EventPage: React.FC<{}> = () => {
                             filter: "blur(3px)",
                         }}
                     />
-                    <div
-                        style={{
-                            position: "absolute",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: "rgba(0, 0, 0, 0.4)",
-                            fontSize: 50,
-                            fontWeight: "bold",
-                            color: "white",
-                        }}
-                    >
-                        <p>{event.name}</p>
+                    <div className={classes["header-container"]}>
+                        <p className={classes["event-name"]}>{event.name}</p>
+                        <div className={classes["cards-container"]}>
+                            <DateNote
+                                startDate={event.start_date}
+                                endDate={event.end_date}
+                            />
+                            <TimeNote
+                                startDate={event.start_date}
+                                endDate={event.end_date}
+                            />
+                            <CityNote city={event.city} />
+                        </div>
                     </div>
                 </header>
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <span>event.</span>
-                </div>
+                <EventRegistrationDialog />
                 <WysiwygReader value={event.description} />
             </div>
         );

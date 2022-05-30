@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
-import classes from "styles/pages/auth.module.scss";
+import classes from "src/pages/auth/style.module.scss";
 import { login, register } from "src/redux/user/functions";
 import { useRootDispatch } from "src/redux";
 
