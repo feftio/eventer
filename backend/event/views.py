@@ -1,14 +1,16 @@
 import datetime
-from multiprocessing import AuthenticationError
+from time import sleep
 from uuid import UUID
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
-from event.models import Event
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, get_object_or_404
+from event import models
 from event import serializers
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import exceptions
+from core import constant
 
 
 class CreateEventView(CreateAPIView):
@@ -37,7 +39,7 @@ class CreateEventView(CreateAPIView):
 class GetUserEventsView(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.UserEventSerializer
-    queryset = Event.objects.filter(active=True)
+    queryset = models.Event.objects.filter(active=True)
 
     def list(self, request, *args, **kwargs):
         self.queryset = self.get_queryset().filter(user=request.user)
@@ -49,7 +51,7 @@ class GetEventView(APIView):
         if 'id' not in request.query_params:
             raise exceptions.NotFound()
         try:
-            event = Event.objects.get(
+            event = models.Event.objects.get(
                 id=UUID(request.query_params['id']))
             serializer = serializers.EventSerializer(
                 instance=event, context={"request": request})
@@ -65,7 +67,7 @@ class GetEventView(APIView):
 class GetEventsView(ListAPIView):
     authentication_classes = ()
     serializer_class = serializers.EventSerializer
-    queryset = Event.objects.filter(active=True)
+    queryset = models.Event.objects.filter(active=True)
 
 
 class LoadImageView(CreateAPIView):
@@ -79,12 +81,41 @@ class LoadImageView(CreateAPIView):
         return response
 
 
-class ChangeEventView(UpdateAPIView):
+class DeleteEventView(APIView):
     permission_classes = (IsAuthenticated, )
-    serializer_class = serializers.ChangeEventSerializer
-    queryset = Event.objects.all()
+    serializer_class = serializers.DeleteEventSerializer
+
+    def delete(self, request, *args, **kwargs):
+        event_id = kwargs.get('id', None)
+        instance = get_object_or_404(
+            models.Event.objects.all(), id=event_id, user=request.user)
+        serializer = serializers.DeleteEventSerializer(instance, request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class LikeEventView(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = serializers.LikeEventSerializer
+    queryset = models.Event.objects.all()
     lookup_field = 'id'
 
+
+class RegisterEventView(APIView):
     def patch(self, request, *args, **kwargs):
-        self.queryset = self.get_queryset().filter(user=request.user)
-        return super().patch(request, *args, **kwargs)
+        instance = get_object_or_404(
+            models.Event.objects.all(), id=kwargs.get('id', None))
+        serializer = serializers.RegisterEventSerializer(request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class GetSpecialInfoView(APIView):
+    def get(self, request, *args, **kwargs):
+        if kwargs['key'] == 'cities':
+            return Response(constant.CITIES)
+        if kwargs['key'] == 'tags':
+            return Response(constant.TAGS)
+        raise exceptions.NotFound()

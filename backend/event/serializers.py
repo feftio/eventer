@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from event import models
 from user.serializers import UserSerializer
 
@@ -25,7 +25,40 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ChangeEventSerializer(serializers.ModelSerializer):
+class DeleteEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
-        exclude = ('tags', 'user')
+        fields = ('id', )
+
+    def update(self, instance, validated_data):
+        instance.active = False
+        instance.save()
+        return instance
+
+
+class LikeEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Event
+        fields = ('liked', )
+
+    def update(self, instance, validated_data):
+        username = self.context['request'].user.username
+        if username in instance.liked or instance.user.username == username:
+            raise exceptions.PermissionDenied("You cannot like this event.")
+        instance.liked.append(username)
+        instance.save()
+        return instance
+
+
+class RegisterEventSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    email = serializers.EmailField()
+    contacts = serializers.CharField()
+
+    class Meta:
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        instance.registered.append(validated_data)
+        instance.save()
+        return instance

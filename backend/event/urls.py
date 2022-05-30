@@ -7,5 +7,8 @@ urlpatterns = [
     path('image', views.LoadImageView.as_view()),
     path('get', views.GetEventView.as_view()),
     path('all', views.GetEventsView.as_view()),
-    path('change/<str:id>', views.ChangeEventView.as_view()),
+    path('register/<str:id>', views.RegisterEventView.as_view()),
+    path('delete/<str:id>', views.DeleteEventView.as_view()),
+    path('like/<str:id>', views.LikeEventView.as_view()),
+    path('special/<str:key>', views.GetSpecialInfoView.as_view()),
 ]
