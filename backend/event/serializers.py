@@ -58,7 +58,7 @@ class RegisterEventSerializer(serializers.Serializer):
     class Meta:
         fields = '__all__'
 
-    def update(self, instance, validated_data):
-        instance.registered.append(validated_data)
+    def create(self, instance):
+        instance.registered.append(self.validated_data)
         instance.save()
         return instance

@@ -1,4 +1,5 @@
 import datetime
+from functools import partial
 from time import sleep
 from uuid import UUID
 from rest_framework.views import APIView
@@ -106,9 +107,9 @@ class RegisterEventView(APIView):
     def patch(self, request, *args, **kwargs):
         instance = get_object_or_404(
             models.Event.objects.all(), id=kwargs.get('id', None))
-        serializer = serializers.RegisterEventSerializer(request.data)
+        serializer = serializers.RegisterEventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.create(instance)
         return Response(serializer.data)
 
 
