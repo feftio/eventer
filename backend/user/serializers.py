@@ -1,16 +1,15 @@
-from dataclasses import field
-from urllib import request
+import uuid
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from user.models import User
+from user import models
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = models.User
         fields = '__all__'
 
     def exclude(self, *fields: tuple) -> None:
@@ -21,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())],
+        validators=[UniqueValidator(queryset=models.User.objects.all())],
     )
     email = serializers.EmailField(
         required=True,
@@ -34,16 +33,17 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = User
+        model = models.User
         fields = ('username', 'email', 'password', )
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = models.User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
         user.save()
+        models.EditorSetting.objects.create(user=user)
         return user
 
 
@@ -76,5 +76,17 @@ class LoginUserSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     class Meta:
-        model = User
+        model = models.User
         fields = ('username', 'password', )
+
+
+class GetEditorSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EditorSetting
+        fields = '__all__'
+
+
+class ChangeEditorSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EditorSetting
+        fields = ('value', )

@@ -7,4 +7,5 @@ urlpatterns = [
     path('login', views.LoginUserView.as_view()),
     path('update', views.UpdateUserDataView.as_view()),
     path('identify', views.IdentifyUserView.as_view()),
+    path('editor', views.EditorSetting.as_view()),
 ]
