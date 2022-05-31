@@ -5,7 +5,7 @@ export default {
             id: "sheNwCUP5A",
             type: "header",
             data: {
-                text: "Editor.js",
+                text: "Description",
                 level: 2,
             },
         },

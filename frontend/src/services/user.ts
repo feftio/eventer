@@ -12,4 +12,10 @@ export const userService = {
             params: { token },
         });
     },
+    getEditorValue() {
+        return instance.get("user/editor");
+    },
+    changeEditorValue(value: object) {
+        return instance.post("user/editor", { value });
+    },
 };

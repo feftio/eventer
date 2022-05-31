@@ -44,3 +44,18 @@ export const ErrorEventRegisterSwal = () => {
         confirmButtonText: "Ok",
     });
 };
+
+export const SuccessSaveEditorSettingSwal = () => {
+    Swal.fire({
+        title: "Success saved!",
+        icon: "success",
+    });
+};
+
+export const ErrorSaveEditorSettingSwal = () => {
+    Swal.fire({
+        title: "Failed saving",
+        icon: "error",
+        confirmButtonText: "Ok",
+    });
+};

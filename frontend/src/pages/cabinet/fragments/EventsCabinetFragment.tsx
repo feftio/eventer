@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
-import EventsTable from "src/components/EventsTable";
+import EventsTable from "src/components/events-table/EventsTable";
 
 const EventsCabinetFragment: React.FC<{}> = () => {
     return (

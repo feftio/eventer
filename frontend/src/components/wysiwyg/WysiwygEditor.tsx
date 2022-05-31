@@ -7,6 +7,11 @@ import tools from "./tools";
 
 const ReactEditorJS = createReactEditorJS();
 
+type WysiwygEditorProps = {
+    value?: object;
+    editor?: any;
+};
+
 const WysiwygEditor: React.FC<any> = (props) => {
     const id = useRootSelector((state) => state.user.id);
     const handleInitialize = (instance) => {
@@ -14,7 +19,7 @@ const WysiwygEditor: React.FC<any> = (props) => {
     };
 
     return (
-        id && (
+        (id && props.value) && (
             <Paper
                 style={{
                     display: "block",
@@ -24,12 +29,17 @@ const WysiwygEditor: React.FC<any> = (props) => {
             >
                 <ReactEditorJS
                     tools={tools(id)}
-                    defaultValue={defaultValue}
+                    defaultValue={props.value}
                     onInitialize={handleInitialize}
                 />
             </Paper>
         )
     );
+};
+
+WysiwygEditor.defaultProps = {
+    value: defaultValue,
+    editor: null,
 };
 
 export default WysiwygEditor;

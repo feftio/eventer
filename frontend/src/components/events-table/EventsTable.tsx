@@ -11,15 +11,16 @@ import {
     IconButton,
     Box,
     CircularProgress,
+    Modal,
 } from "@mui/material";
 import React from "react";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Visibility";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import { useRootSelector } from "src/redux";
 import { eventService } from "src/services/event";
 import { useNavigate } from "react-router-dom";
 import { DeleteEventSwal } from "src/swal/event";
+import classes from "./EventsTable.module.scss";
 
 function createColumn(name: string, align: TableCellProps["align"] = "left") {
     return { name, align };
@@ -31,12 +32,13 @@ const columns = [
     createColumn("Registered", "center"),
     createColumn("Watched", "center"),
     createColumn("City", "center"),
-    createColumn("Edit", "center"),
+    createColumn("Check", "center"),
     createColumn("Delete", "center"),
 ];
 
 const EventsTable: React.FC<{}> = () => {
     const navigate = useNavigate();
+    const [checkIndex, setCheckIndex] = React.useState<number | null>(null);
     const [events, setEvents] = React.useState<any | null>(null);
     const [change, setChange] = React.useState<boolean>(true);
     React.useEffect(() => {
@@ -82,7 +84,7 @@ const EventsTable: React.FC<{}> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {events.map((event) => (
+                        {events.map((event, index) => (
                             <TableRow
                                 key={event.name}
                                 sx={{
@@ -118,11 +120,11 @@ const EventsTable: React.FC<{}> = () => {
                                     <IconButton
                                         size="large"
                                         onClick={() => {
-                                            console.dir(event.name);
+                                            setCheckIndex(index);
                                         }}
                                         color="primary"
                                     >
-                                        <EditOutlinedIcon />
+                                        <CheckIcon />
                                     </IconButton>
                                 </TableCell>
                                 <TableCell align="center">
@@ -158,6 +160,49 @@ const EventsTable: React.FC<{}> = () => {
             >
                 <AddIcon />
             </Button>
+            <Modal
+                open={checkIndex !== null ? true : false}
+                onClose={() => setCheckIndex(null)}
+            >
+                <Box
+                    sx={{
+                        position: "absolute" as "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        minWidth: 400,
+                        maxHeight: 500,
+                        bgcolor: "background.paper",
+                        borderRadius: "5px",
+                        boxShadow: 24,
+                        p: 4,
+                        overflowY: "auto",
+                    }}
+                >
+                    {checkIndex !== null && (
+                        <>
+                            <Paper component="h2" sx={{ textAlign: "center" }}>
+                                {events[checkIndex].name}
+                            </Paper>
+                            {events[checkIndex].registered.map(
+                                (credentials: any, index) => (
+                                    <Paper
+                                        key={index}
+                                        sx={{ textAlign: "left", mt: 2, p: 2 }}
+                                    >
+                                        <p>Id: {index + 1}</p>
+                                        <p>Name: {credentials["name"]}</p>
+                                        <p>Email: {credentials["email"]}</p>
+                                        <p>
+                                            Contacts: {credentials["contacts"]}
+                                        </p>
+                                    </Paper>
+                                )
+                            )}
+                        </>
+                    )}
+                </Box>
+            </Modal>
         </Box>
     );
 };
