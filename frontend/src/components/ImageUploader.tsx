@@ -27,13 +27,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
                         props.setImage(e.target.files[0]);
                     }}
                 />
-                <Button
-                    fullWidth
-                    variant="outlined"
-                    endIcon={<PhotoCamera />}
-                    component="span"
-                >
-                    Upload
+                <Button fullWidth variant="outlined" component="span">
+                    <PhotoCamera />
                 </Button>
             </label>
             {props.image !== null ? (
