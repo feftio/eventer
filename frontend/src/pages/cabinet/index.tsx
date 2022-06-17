@@ -17,12 +17,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRootDispatch } from "src/redux";
-import { logout } from "src/redux/user/functions";
+import { logout } from "src/redux/user/thunks";
 import withAuthRedirect from "src/hoc/withAuthRedirect";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Swal from "src/swal";
-import { cabinetFragmentsForEach } from "./fragments";
 import ProfileMenu from "src/components/ProfileMenu";
+import { RouteManager, useRouteManager } from "src/components/composable-route";
 
 const drawerWidth = 200;
 
@@ -95,7 +95,8 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-const CabinetPage: React.FC<{}> = () => {
+const CabinetPage: React.FC = () => {
+    const routeManager = useRouteManager();
     const path = useLocation().pathname.split("/")[2];
     const navigate = useNavigate();
     const dispatch = useRootDispatch();
@@ -146,14 +147,15 @@ const CabinetPage: React.FC<{}> = () => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {cabinetFragmentsForEach((type, fragment) => (
+                    {routeManager.forEach((fragment) => (
                         <ListItemButton
-                            key={type}
+                            key={fragment.path}
                             sx={{
                                 minHeight: 48,
                                 backgroundColor:
                                     path === fragment.path ||
-                                    (path === undefined && type === "events")
+                                    (path === undefined &&
+                                        fragment.default === true)
                                         ? "#f5f5f5"
                                         : "transparent",
                                 justifyContent: open ? "initial" : "center",
@@ -170,7 +172,7 @@ const CabinetPage: React.FC<{}> = () => {
                                     justifyContent: "center",
                                 }}
                             >
-                                {fragment.icon()}
+                                {<fragment.icon />}
                             </ListItemIcon>
                             <ListItemText
                                 primary={fragment.label}
