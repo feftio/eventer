@@ -8,9 +8,7 @@ export const userService = {
         return instance.post("user/register", { username, email, password });
     },
     identify(token: string) {
-        return instance.get("user/identify", {
-            params: { token },
-        });
+        return instance.get(`user/identify/${token}`);
     },
     getEditorValue() {
         return instance.get("user/editor");
