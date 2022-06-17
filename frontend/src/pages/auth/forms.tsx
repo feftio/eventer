@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import classes from "src/pages/auth/style.module.scss";
-import { login, register } from "src/redux/user/functions";
+import { login, register } from "src/redux/user/thunks";
 import { useRootDispatch } from "src/redux";
 
 export const LoginForm: React.FC<any> = () => {

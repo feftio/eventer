@@ -2,7 +2,7 @@ import React from "react";
 import { AccountCircle } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import { useRootDispatch, useRootSelector } from "src/redux";
-import { logout } from "src/redux/user/functions";
+import { logout } from "src/redux/user/thunks";
 
 const ProfileMenu: React.FC<{}> = () => {
     const dispatch = useRootDispatch();

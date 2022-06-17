@@ -1,6 +1,6 @@
 import React from "react";
 import { useRootDispatch, useRootSelector } from "src/redux";
-import { logout } from "src/redux/user/functions";
+import { logout } from "src/redux/user/thunks";
 
 const HomePage: React.FC<{}> = () => {
     const dispatch = useRootDispatch();
