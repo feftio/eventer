@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from user import models
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import update_last_login
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,9 +13,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = models.User
         fields = '__all__'
 
-    def exclude(self, *fields: tuple) -> None:
-        setattr(self.Meta, 'fields', None)
-        setattr(self.Meta, 'exclude', fields)
+
+class IdentifyUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        exclude = ('password', 'date_joined',
+                   'groups', 'is_active', 'user_permissions', 'is_superuser', 'is_staff')
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -62,6 +66,7 @@ class LoginUserSerializer(serializers.ModelSerializer):
             token = Token.objects.get(user=user)
         else:
             token = Token.objects.create(user=user)
+        update_last_login(None, user)
         return token
 
     def validate(self, attrs):
@@ -70,7 +75,7 @@ class LoginUserSerializer(serializers.ModelSerializer):
         user = authenticate(username=username, password=password)
         if user is None:
             raise serializers.ValidationError(
-                'A user with this username and password is not found.'
+                'A user with this username and password was not found.'
             )
         attrs['user'] = user
         return super().validate(attrs)
