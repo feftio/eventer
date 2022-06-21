@@ -23,7 +23,7 @@ class Event(models.Model):
     description = models.JSONField(default=list)
     tags = models.JSONField()
     created_at = models.DateTimeField(default=timezone.now)
-    city = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50)
     registered = models.JSONField(default=list)
     watched = models.IntegerField(default=0)
     liked = models.JSONField(default=list)
