@@ -1,4 +1,3 @@
-from multiprocessing.spawn import prepare
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -11,7 +10,7 @@ from rest_framework.authtoken.models import Token
 
 
 class AllUsersView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args, **kwargs):
         user = models.User.objects.get(pk=1)
         serializer = serializers.UserSerializer(instance=user)
         return Response(data=serializer.data)
@@ -26,7 +25,6 @@ class UpdateUserDataView(APIView):
         serializer = serializers.UserSerializer(
             instance=user, data={'first_name': first_name}, partial=True)
         serializer.is_valid(raise_exception=True)
-        print(user._meta.fields[0].blank)
         return Response(serializers.UserSerializer(instance=user).data)
 
 
@@ -43,24 +41,22 @@ class LoginUserView(APIView):
 
 
 class IdentifyUserView(APIView):
-    def get(self, request: Request):
-        serializer = serializers.UserSerializer(instance=Token.objects.get(
-            key=request.query_params.get('token')).user)
-        serializer.exclude('password', 'date_joined',
-                           'groups', 'is_active', 'user_permissions')
+    def get(self, request: Request, *args, **kwargs):
+        serializer = serializers.IdentifyUserSerializer(instance=Token.objects.get(
+            key=kwargs.get('token')).user)
         return Response(serializer.data)
 
 
 class EditorSetting(APIView):
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args, **kwargs):
         instance = get_object_or_404(
             models.EditorSetting.objects.all(), user=request.user)
         serializer = serializers.GetEditorSettingSerializer(instance=instance)
         return Response(serializer.data['value'])
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: Request, *args, **kwargs):
         instance = get_object_or_404(
             models.EditorSetting.objects.all(), user=request.user)
         serializer = serializers.ChangeEditorSettingSerializer(
