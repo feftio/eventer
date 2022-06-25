@@ -1,5 +1,6 @@
 from rest_framework import serializers, exceptions
 from event import models
+from event import validators
 from user.serializers import UserSerializer
 
 
@@ -9,14 +10,15 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Event
         fields = '__all__'
+        validators = [validators.TagsValidator(), validators.CityValidator()]
 
 
-class UserEventSerializer(serializers.ModelSerializer):
+class UserEventsSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
     class Meta:
         model = models.Event
-        fields = '__all__'
+        exclude = ('description', )
 
 
 class ImageSerializer(serializers.ModelSerializer):
