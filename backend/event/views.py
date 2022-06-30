@@ -1,6 +1,4 @@
 import datetime
-from functools import partial
-from time import sleep
 from uuid import UUID
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -32,23 +30,22 @@ class CreateEventView(CreateAPIView):
         request.data._mutable = False
         return request
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request: Request, *args, **kwargs):
         request = self.prepare_data(request)
         return super().create(request, *args, **kwargs)
 
 
 class GetUserEventsView(ListAPIView):
     permission_classes = (IsAuthenticated, )
-    serializer_class = serializers.UserEventSerializer
+    serializer_class = serializers.UserEventsSerializer
     queryset = models.Event.objects.filter(active=True)
 
-    def list(self, request, *args, **kwargs):
-        self.queryset = self.get_queryset().filter(user=request.user)
-        return super().list(request, *args, **kwargs)
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
 
 
 class GetEventView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args, **kwargs):
         if 'id' not in request.query_params:
             raise exceptions.NotFound()
         try:
@@ -75,7 +72,7 @@ class LoadImageView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser, )
     serializer_class = serializers.ImageSerializer
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request: Request, *args, **kwargs):
         request.data['user'] = request.query_params.get('user_id', None)
         response = super().create(request, *args, **kwargs)
         response.data = {'success': 1, 'file': {'url': response.data['image']}}
@@ -86,7 +83,7 @@ class DeleteEventView(APIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.DeleteEventSerializer
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request: Request, *args, **kwargs):
         event_id = kwargs.get('id', None)
         instance = get_object_or_404(
             models.Event.objects.all(), id=event_id, user=request.user)
@@ -104,7 +101,7 @@ class LikeEventView(UpdateAPIView):
 
 
 class RegisterEventView(APIView):
-    def patch(self, request, *args, **kwargs):
+    def patch(self, request: Request, *args, **kwargs):
         instance = get_object_or_404(
             models.Event.objects.all(), id=kwargs.get('id', None))
         serializer = serializers.RegisterEventSerializer(data=request.data)
@@ -114,7 +111,7 @@ class RegisterEventView(APIView):
 
 
 class GetSpecialInfoView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args, **kwargs):
         if kwargs['key'] == 'cities':
             return Response(constant.CITIES)
         if kwargs['key'] == 'tags':
