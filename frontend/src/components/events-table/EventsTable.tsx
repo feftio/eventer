@@ -123,6 +123,7 @@ const EventsTable: React.FC<{}> = () => {
                                             setCheckIndex(index);
                                         }}
                                         color="primary"
+                                        disabled={event.registered == 0}
                                     >
                                         <CheckIcon />
                                     </IconButton>
